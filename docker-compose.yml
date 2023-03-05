@@ -1,25 +1,16 @@
-version: '3.8'
+version: '3'
 services:
-  php-apache-environment:
-    container_name: php-apache
-    build:
-      context: ./php
-      dockerfile: Dockerfile
-    depends_on:
-      - db
-    volumes:
-      - ./php/src:/var/www/html/
-    ports:
-      - 8000:80
-
-  db:
-    container_name: db
-    image: mysql
+  web:
+    image: php:apache
     restart: always
     environment:
-        MYSQL_ROOT_PASSWORD: Example
-        MYSQL_DATABASE: MY_DATABASE
-        MYSQL_USER: MYSQL_USER
-        MYSQL_PASSWORD: MYSQL_PASSWORD
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
-        - "9906:3306"
+      - "80:80"
+    volumes:
+      - ./src:/var/www/html/
+    env_file:
+      - .env
